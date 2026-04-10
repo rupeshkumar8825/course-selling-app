@@ -9,7 +9,14 @@ courseRouter.get("/courses", function(req : Request, res : Response){
     res.status(200).json({
         message : "Successfully fetched the list of all offered courses"
     });
-})
+});
 
+
+// get the course preview to be shown to the user
+courseRouter.get("/preview", function(req : Request, res : Response){
+    res.status(200).json({
+        message : "Successfully fetched the course preview in this case"
+    });
+});
 
 export default courseRouter;

@@ -1,14 +1,16 @@
 // import  from "express"
 import express, { Request, Response, Express } from "express";
-import userRouter from "./routes/user.route";
-import courseRouter from "./routes/course.route";
+import userRouter from "./routes/user.routes";
+import courseRouter from "./routes/course.routes";
+import adminRouter from "./routes/admin.routes";
 
 const app : Express = express();
 //define your middlewares here in this case 
 console.log("inside the index.ts file")
 
-app.use("/user", userRouter);
-app.use("/course", courseRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/course", courseRouter);
+app.use("/api/v1/admin", adminRouter);
 
 
 
