@@ -6,10 +6,6 @@ const ObjectId = mongoose.Types.ObjectId
 
 console.log("Inside the db.ts file and trying to initialize the database");
 
-// lets try to connect with the mongodb url/cluster 
-// note that this returns a promise or say this is asynchronous function hence we will 
-// have to await it below hence this implementation is not totally correct for this purpose. 
-mongoose.connect("database url should come here/database_name")
 
 
 const userSchema = new Schema({
