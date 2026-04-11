@@ -1,12 +1,31 @@
 // this is the user related routes that we have to implement so that the index.ts gets clean altogether 
 import { Express, Request, Response } from "express";
 import { Router } from "express";
+import { userModel } from "../db";
+import mongoose from "mongoose";
+import { validateUserData } from "../middleware/user.middleware";
+import { signupUserSchema } from "../schemas/user.schema";
+
 const userRouter = Router();
 
 
+// all the middlewares to use comes here
 
 //define your routes here may be. 
-userRouter.post("/user/signup", function(req : Request, res : Response) {
+userRouter.post("/signup", validateUserData(signupUserSchema), async function(req : Request, res : Response) {
+    // lets implement this end point now. 
+    const { email, password, firstName, lastName } = req.body;
+
+    // TODO : add the error handling here too
+
+    //insert this entry into the db now
+    await userModel.create({
+        email : email, 
+        firstName : firstName, 
+        lastName : lastName, 
+        password : password
+    });
+
     res.status(200).json({
         message : "signup successfully done. thanks"
     });
@@ -14,7 +33,7 @@ userRouter.post("/user/signup", function(req : Request, res : Response) {
 
 
 
-userRouter.post("/user/signin", function(req : Request, res : Response){
+userRouter.post("/signin", function(req : Request, res : Response){
     res.status(200).json({
         message : "User successfully signed in"
     });
@@ -23,7 +42,7 @@ userRouter.post("/user/signin", function(req : Request, res : Response){
 
 
 // get the list of courses enrolled by the user 
-userRouter.get("/user/purchases", function(req : Request, res: Response) {
+userRouter.get("/purchases", function(req : Request, res: Response) {
     res.status(200).json({
         message : "successfully fetched the list of courses in which user is enrolled into"
     });
@@ -31,7 +50,7 @@ userRouter.get("/user/purchases", function(req : Request, res: Response) {
 
 
 // end point to purchase the course by paying 
-userRouter.post("/user/purchase", function(req : Request, res: Response){
+userRouter.post("/purchase", function(req : Request, res: Response){
     // here we are expecting the user to pay the money
     res.json({
         message : "Course purchase successfull"

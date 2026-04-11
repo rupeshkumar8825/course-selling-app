@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { Express } from "express";
-import  adminModel  from "../db"
+import { adminModel }  from "../db"
 
 const adminRouter = Router();
 
@@ -11,7 +11,7 @@ adminRouter.post("/signup", async function(request : Request, response : Respons
         message: "Succcessfully signed up as admin"
     });
 
-    
+
 });
 
 
