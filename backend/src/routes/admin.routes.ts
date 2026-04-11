@@ -1,12 +1,27 @@
 import { Request, Response, Router } from "express";
 import { Express } from "express";
 import { adminModel }  from "../db"
+import { validateUserData } from "../middleware/user.middleware";
+import { signUpAdminSchema } from "../schemas/admin.schema";
 
 const adminRouter = Router();
 
 
 // route for new admin sign up
-adminRouter.post("/signup", async function(request : Request, response : Response) {
+adminRouter.post("/signup", validateUserData(signUpAdminSchema), async function(request : Request, response : Response) {
+    const { email, firstName, lastName, password } = request.body;
+
+    // TODO : hash the password before storing it
+
+    await adminModel.create({
+        email : email, 
+        firstName : firstName, 
+        lastName : lastName, 
+        password : password
+    });
+
+
+    // say everything went fine
     response.status(200).json({
         message: "Succcessfully signed up as admin"
     });

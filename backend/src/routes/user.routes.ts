@@ -2,20 +2,22 @@
 import { Express, Request, Response } from "express";
 import { Router } from "express";
 import { userModel } from "../db";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import { validateUserData } from "../middleware/user.middleware";
-import { signupUserSchema } from "../schemas/user.schema";
+import { signinUserSchema, signupUserSchema } from "../schemas/user.schema";
+import jwt from "jsonwebtoken"
 
 const userRouter = Router();
 
 
 // all the middlewares to use comes here
-
 //define your routes here may be. 
 userRouter.post("/signup", validateUserData(signupUserSchema), async function(req : Request, res : Response) {
     // lets implement this end point now. 
     const { email, password, firstName, lastName } = req.body;
 
+
+    // TODO : has the password so plaintext pw is not stored in the DB 
     // TODO : add the error handling here too
 
     //insert this entry into the db now
@@ -33,7 +35,22 @@ userRouter.post("/signup", validateUserData(signupUserSchema), async function(re
 
 
 
-userRouter.post("/signin", function(req : Request, res : Response){
+userRouter.post("/signin", validateUserData(signinUserSchema),  async function(req : Request, res : Response){
+    const {email, password} = req.body;
+
+    // need to check whether atleast a single entry remains with this password and email or not 
+    const user = await userModel.findOne({
+        email : email, 
+        password : password
+    });
+
+    if(user)
+    {
+        const token = jwt.sign({
+            id : user._id
+        }, "SOME VALUE SHOULD COME HERE")
+    }
+
     res.status(200).json({
         message : "User successfully signed in"
     });

@@ -1,5 +1,7 @@
 //this is the database schema file where we will create the schema of our database 
 import mongoose from "mongoose";
+import zod from "zod"
+
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId
 
