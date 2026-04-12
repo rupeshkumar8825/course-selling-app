@@ -2,7 +2,10 @@ import { Request, Response, Router } from "express";
 import { Express } from "express";
 import { adminModel }  from "../db"
 import { validateUserData } from "../middleware/user.middleware";
-import { signUpAdminSchema } from "../schemas/admin.schema";
+import { signInAdminSchema, signUpAdminSchema } from "../schemas/admin.schema";
+import jwt  from "jsonwebtoken"
+
+const JWT_ADMIN_SECRET = "ALFHAOIHFLJALKFDA";
 
 const adminRouter = Router();
 
@@ -30,10 +33,38 @@ adminRouter.post("/signup", validateUserData(signUpAdminSchema), async function(
 });
 
 
-adminRouter.post("/signin", function(request : Request, response : Response) {
-    response.status(200).json({
-        message : "Successfully signed in as an admin"
+// route for signing the admin user
+adminRouter.post("/signin", validateUserData(signInAdminSchema),  async function(request : Request, response : Response) {
+    const { email, password } = request.body;
+
+
+    // check whether the admin user exists or not with this credentials 
+    const adminUser = await adminModel.findOne({
+        email : email,
+        password : password
     });
+
+    if(adminUser)
+    {
+        // meaning that the admin user exists 
+        // create the jwt token and return to the user itself
+        const token = jwt.sign({id : adminUser._id}, JWT_ADMIN_SECRET);
+
+        // say everything went fine 
+        response.status(200).json({
+            message : "Signin Successfully done.",
+            token : token
+        })
+    }
+    else 
+    {
+        response.status(401).json({
+            message : "Signin failed"
+        });
+
+    }
+
+
 });
 
 

@@ -10,6 +10,8 @@ import jwt from "jsonwebtoken"
 const userRouter = Router();
 
 
+const JWT_USER_SECRET = "askhfaiowehanfkldsan";
+
 // all the middlewares to use comes here
 //define your routes here may be. 
 userRouter.post("/signup", validateUserData(signupUserSchema), async function(req : Request, res : Response) {
@@ -48,12 +50,15 @@ userRouter.post("/signin", validateUserData(signinUserSchema),  async function(r
     {
         const token = jwt.sign({
             id : user._id
-        }, "SOME VALUE SHOULD COME HERE")
+        }, JWT_USER_SECRET)
+    }
+    else 
+    {
+        res.status(401).json({
+            message : "User signin failed."
+        });
     }
 
-    res.status(200).json({
-        message : "User successfully signed in"
-    });
 })
 
 
