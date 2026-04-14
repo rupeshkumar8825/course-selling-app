@@ -1,11 +1,12 @@
 import { Request, Response, Router } from "express";
 import { Express } from "express";
-import { adminModel }  from "../db"
+import { adminModel, courseModel }  from "../db"
 import { validateUserData } from "../middleware/user.middleware";
-import { signInAdminSchema, signUpAdminSchema } from "../schemas/admin.schema";
+import { adminCourseSchema, signInAdminSchema, signUpAdminSchema } from "../schemas/admin.schema";
 import jwt  from "jsonwebtoken"
+import { JWT_ADMIN_SECRET } from "../config";
+import { authenticateAdminToken } from "../middleware/auth.middleware";
 
-const JWT_ADMIN_SECRET = "ALFHAOIHFLJALKFDA";
 
 const adminRouter = Router();
 
@@ -69,7 +70,21 @@ adminRouter.post("/signin", validateUserData(signInAdminSchema),  async function
 
 
 // endpoint to create a new course
-adminRouter.post("/course", function(request : Request, response : Response){
+adminRouter.post("/course", [authenticateAdminToken, validateUserData(adminCourseSchema)] , async function(request : Request, response : Response){
+
+    const { title, description, price, imageUrl } = request.body;
+    
+    // now the admin user is already authenticated and also the data is validated properly
+    // lets insert into the database 
+    await courseModel.create({
+        title : title, 
+        description : description, 
+        price : price, 
+        imageUrl : imageUrl, 
+        creatorId : request.userId
+    });
+
+
     response.status(200).json({
         message : "successfully created the course"
     });

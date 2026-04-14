@@ -13,7 +13,7 @@ const emailSchema = z.email("Invalid email").transform((value) => value.toLowerC
 const firstNameSchema = z.string().min(3, "First name should be atleast 3 characters long")
 const lastNameSchema = z.string().min(3, "Last name must be atleast 3 characters long");
 
-
+const objectIdSchema = z.string().length(24, "Invalid Mongo ObjectId");
 
 
 // please note that the _id will automatically will be appended by the mongodb itself
@@ -25,8 +25,20 @@ export const signUpAdminSchema = z.object({
 });
 
 
+
 export const signInAdminSchema = z.object({
     email : emailSchema, 
     password : passwordSchema
 });
+
+
+
+export const adminCourseSchema = z.object({
+    title : z.string().min(3, "Minimum title length should be 3")
+            .max(100, "Max title length could be 100"),
+    description : z.string(),
+    price : z.number().positive(), 
+    imageUrl : z.string(), 
+    creatorId : objectIdSchema
+})
 

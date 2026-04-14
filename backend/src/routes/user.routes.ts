@@ -6,11 +6,11 @@ import { userModel } from "../db";
 import { validateUserData } from "../middleware/user.middleware";
 import { signinUserSchema, signupUserSchema } from "../schemas/user.schema";
 import jwt from "jsonwebtoken"
+import { JWT_USER_SECRET } from "../config";
 
 const userRouter = Router();
 
 
-const JWT_USER_SECRET = "askhfaiowehanfkldsan";
 
 // all the middlewares to use comes here
 //define your routes here may be. 
